@@ -7,8 +7,9 @@ const port = 3000;
 app.use(express.json());
 
 
-app.post('/user', UserController.createUser);
-app.delete('/delUser', UserController.deleteAllUsers);
+app.post('/user', UserController.registerUser);
+app.post('/login', UserController.login);
+app.delete('/delUsers', UserController.deleteAllUsers);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
