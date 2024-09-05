@@ -13,7 +13,7 @@ function generateRefreshToken(user, jti) {
       userId: user.id,
       jti
     }, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '5h',
     });
   }
   

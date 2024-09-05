@@ -7,6 +7,8 @@ import {addRefreshTokenToWhitelist} from './authService.js'
 import { db } from "../utils/db.js";
 
 
+
+
 const deleteAllRefreshTokens = async (req, res, next) => {
   try {
     const deleteCount = await db.refreshToken.deleteMany();
@@ -24,6 +26,19 @@ const deleteAllUsers = async (req, res, next) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+const listAllRefreshTokens = async (req, res, next) => {
+  try {
+
+    const users = await db.refreshToken.findMany();
+    return res.json(users)
+
+  } catch (error) {
+    return (
+      {error}
+    )
+  }
+}
 
 const listAllUsers = async (req, res, next) => {
   try {
@@ -99,4 +114,4 @@ const registerUser = async (req, res, next) => {
     }
   }
 
-export default{registerUser, login, listAllUsers, deleteAllRefreshTokens, deleteAllUsers};
+export default{registerUser, login, listAllUsers, deleteAllRefreshTokens, deleteAllUsers, listAllRefreshTokens};

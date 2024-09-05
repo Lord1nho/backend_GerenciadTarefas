@@ -23,7 +23,7 @@ function findRefreshTokenById(id) {
 
 // soft delete tokens after usage.
 function deleteRefreshToken(id) {
-  return db.refreshToken.update({
+  return db.refreshToken.delete({
     where: {
       id,
     }
@@ -39,4 +39,4 @@ function revokeTokens(userId) {
 }
 
 export {
-  addRefreshTokenToWhitelist, findRefreshTokenById, deleteRefreshToken, revokeTokens};
+  addRefreshTokenToWhitelist, findRefreshTokenById, deleteRefreshToken};

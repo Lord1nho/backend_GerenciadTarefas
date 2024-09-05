@@ -18,6 +18,7 @@ model User {
   email         String         @unique
   password      String
   refreshTokens RefreshToken[]
+  TodoItem TodoItem[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -28,6 +29,17 @@ model RefreshToken {
   userId      String
   User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TodoItem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  isDone      Boolean  @default(false)
+  userId      String
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relaciona cada item com um usuário
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
