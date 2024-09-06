@@ -1,5 +1,6 @@
 import express from 'express';
 import UserController from './controller/UserController.js'; // Use o caminho correto e extensão .js
+import UserTodoList from './controller/UserTodoList.js';
 import { addRefreshTokenToWhitelist, findRefreshTokenById, deleteRefreshToken } from './controller/authService.js';
 import { findUserById } from './controller/userServices.js';
 import jwt from 'jsonwebtoken';
@@ -23,8 +24,12 @@ app.use((req, res, next) => {
 
 app.post('/user', UserController.registerUser);
 app.post('/login', UserController.login);
+app.post('/login', UserController.login);
 app.delete('/delUsers', UserController.deleteAllUsers);
-app.get('/listUsers', UserController.listAllRefreshTokens);
+app.get('/listUsers', UserController.listAllUsers);
+app.post('/user/:userId/createTask', UserTodoList.createTask);
+app.post('/user/:userId/:taskId/updateTask', UserTodoList.updateTask);
+
 
 app.post('/refreshToken', async (req, res, next) => {
   try {
@@ -66,6 +71,8 @@ app.post('/refreshToken', async (req, res, next) => {
     next(err);
   }
 });
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
