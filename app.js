@@ -17,17 +17,16 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
 app.post('/user', UserController.registerUser);
 app.post('/login', UserController.login);
-app.delete('/delUsers', UserController.deleteAllUsers);
-app.get('/listUsers', UserController.listAllUsers);
+app.delete('/user/:userId/:taskId/deleteTask', UserTodoList.deleteTask);
 app.post('/user/:userId/createTask', UserTodoList.createTask);
-app.post('/user/:userId/:taskId/updateTask', UserTodoList.updateTask);
+app.patch('/user/:userId/:taskId/updateTask', UserTodoList.updateTask);
 app.get('/user/:userId/getTaskByUserId', UserTodoList.getTaskFromUser);
 app.get('/user/findUserByEmail', UserController.getIdFromEmail)
 

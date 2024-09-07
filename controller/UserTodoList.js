@@ -110,5 +110,43 @@ const getTaskFromUser = async (req, res) => {
   }
 };
 
+const deleteTask = async (req, res) => {
+  const { userId, taskId } = req.params; // Obtenha userId e taskId dos parâmetros da URL
 
-export default {createTask, updateTask, getTaskFromUser};
+  try {
+    // Verifica se o usuário existe
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    // Verifica se a tarefa pertence ao usuário
+    const todoItem = await db.todoItem.findUnique({
+      where: { id: parseInt(taskId) },
+    });
+
+    if (!todoItem) {
+      return res.status(404).json({ error: 'Tarefa não encontrada' });
+    }
+
+    if (todoItem.userId !== userId) {
+      return res.status(403).json({ error: 'Não autorizado a excluir esta tarefa' });
+    }
+
+    // Exclui a tarefa
+    await db.todoItem.delete({
+      where: { id: parseInt(taskId) },
+    });
+
+    res.status(200).json({ message: 'Tarefa excluída com sucesso' }); // Retorna uma mensagem de sucesso
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao excluir a tarefa' });
+  }
+};
+
+
+export default {createTask, updateTask, getTaskFromUser, deleteTask};
