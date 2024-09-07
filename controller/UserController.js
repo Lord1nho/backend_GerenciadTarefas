@@ -8,6 +8,26 @@ import { db } from "../utils/db.js";
 
 
 
+const getIdFromEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res.status(400);
+      throw new Error('You must provide an email');
+    }
+
+    const existingUser = await findUserByEmail(email);
+
+    if (!existingUser) {
+      res.status(403);
+      throw new Error('Invalid email');
+    }
+
+    res.json(existingUser.id);
+  } catch (err) {
+    next(err);
+  }
+}
 
 const deleteAllRefreshTokens = async (req, res, next) => {
   try {
@@ -105,13 +125,17 @@ const registerUser = async (req, res, next) => {
       const { accessToken, refreshToken } = generateTokens(existingUser, jti);
       await addRefreshTokenToWhitelist({ jti, refreshToken, userId: existingUser.id });
   
+      
       res.json({
         accessToken,
-        refreshToken
+        refreshToken,
+        user: {
+          id: existingUser.id
+        }
       });
     } catch (err) {
       next(err);
     }
   }
 
-export default{registerUser, login, listAllUsers, deleteAllRefreshTokens, deleteAllUsers, listAllRefreshTokens};
+export default{registerUser, login, listAllUsers, deleteAllRefreshTokens, deleteAllUsers, listAllRefreshTokens, getIdFromEmail};

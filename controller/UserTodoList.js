@@ -1,4 +1,5 @@
 //"9362b613-5eec-4b73-9871-15f41deca195"
+import { response } from "express";
 import { db } from "../utils/db.js";
 
 const createTask = async (req, res) => {
@@ -31,10 +32,6 @@ const createTask = async (req, res) => {
           res.status(500).json({ error: 'Erro ao criar o item de todo' });
         }
       };
-  };
-
-  const finishTask = async (req, res) => {
-    
   };
 
   const updateTask = async (req, res) => {
@@ -81,8 +78,35 @@ const createTask = async (req, res) => {
     }
   };
 
-const deleteTask = async (req, res) => {
-    
-  };
+const getTaskFromUser = async (req, res) => {
+  const { userId } = req.params; // Obtenha userId e taskId dos parâmetros da URL
 
-export default {createTask, updateTask};
+  try {
+    // Verifica se o usuário existe
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado' });
+    }
+
+    // Verifica se a tarefa pertence ao usuário
+    const todoItem = await db.todoItem.findMany({
+      where: {
+        userId: userId,
+      },
+    })
+
+    if (todoItem.length === 0) {
+      return res.status(404).json({ error: 'Sem tarefas para esse usuário' });
+    }
+
+    res.status(200).json(todoItem); // Retorna o item atualizado
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao fazer a requisição' });
+  }
+};
+
+export default {createTask, updateTask, getTaskFromUser};
