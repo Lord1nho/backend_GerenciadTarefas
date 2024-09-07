@@ -95,6 +95,7 @@ const getTaskFromUser = async (req, res) => {
     const todoItem = await db.todoItem.findMany({
       where: {
         userId: userId,
+        isDone: false //apenas vai exibir tarefas não concluídas
       },
     })
 
@@ -108,5 +109,6 @@ const getTaskFromUser = async (req, res) => {
     res.status(500).json({ error: 'Erro ao fazer a requisição' });
   }
 };
+
 
 export default {createTask, updateTask, getTaskFromUser};
