@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 const { sign } = jwt;
+import dotenv from 'dotenv';
+dotenv.config(); // Carrega as variáveis de ambiente do .env
 
 // Usually I keep the token between 5 minutes - 15 minutes
 function generateAccessToken(user) {
